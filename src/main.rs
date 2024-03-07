@@ -1,30 +1,34 @@
+use std::sync::{Arc, Mutex};
 fn main() {
-    let mut arr = [
-        EnUm::Text("one".into()),
-        EnUm::Text("one2".into()),
-        EnUm::Point2 { x: 3, y: 4 },
-        EnUm::Text("two".into()),
-    ];
-    println!("\narr: {:?}\n", arr);
-    for item in &mut arr {
-        println!("");
-        match item {
-            EnUm::Point2 { x: ref mut vv, .. } => {
-                println!(" BEFORE -> {:?}", vv);
-                *vv = 111;
-                println!(" AFTER -> {:?}", vv);
-            }
-            ref val => {
-                println!(" a -> {:?}", val);
-            }
-        }
-        println!(" item2 -> {:?}", item);
-    }
-    println!("\narr: {:?}\n", arr);
+    let over = OverLoad {};
+    println!("\narr: {:?}\n", over);
+    over.one();
+    OverLoad::one(&over);
+    over.two();
+    let another = Box::new(OverLoad {});
+    println!("\nr: {:?}\n", another);
+    another.three();
+    //println!("\nr: {:?}\n", another);
+    let again = Arc::new(OverLoad {});
+    println!("\nr: {:?}\n", again);
+    again.four();
+    //println!("\nr: {:?}\n", again);
 }
 
 #[derive(Debug)]
-enum EnUm {
-    Text(String),
-    Point2 { x: i32, y: i32 },
+struct OverLoad {}
+
+impl OverLoad {
+    fn one(&self) {
+        println!("one: <{:?}>", self);
+    }
+    fn two(self) {
+        println!("two: <{:?}>", self);
+    }
+    fn three(self: Box<Self>) {
+        println!("three: <{:?}>", self);
+    }
+    fn four(self: Arc<Self>) {
+        println!("four: <{:?}>", self);
+    }
 }
