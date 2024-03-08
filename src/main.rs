@@ -1,34 +1,35 @@
-use std::sync::{Arc, Mutex};
-fn main() {
-    let over = OverLoad {};
-    println!("\narr: {:?}\n", over);
-    over.one();
-    OverLoad::one(&over);
-    over.two();
-    let another = Box::new(OverLoad {});
-    println!("\nr: {:?}\n", another);
-    another.three();
-    //println!("\nr: {:?}\n", another);
-    let again = Arc::new(OverLoad {});
-    println!("\nr: {:?}\n", again);
-    again.four();
-    //println!("\nr: {:?}\n", again);
+macro_rules! raa_1 {
+    () => {
+        println!("raa1");
+    };
 }
 
+macro_rules! raa_2 {
+    ($txt:ident) => {
+        println!("raa2: ({})", stringify!($txt));
+        let $txt = "something";
+        println!("raa2.2: ({})", $txt);
+    };
+    [$txt:ident] => {
+        println!("raa3: [{}]", stringify!($txt));
+        let $txt = "something";
+        println!("raa3.3: [{}]", $txt);
+    };
+}
+
+//  //  //  //  //  //  //  //  //  //  //
+fn main() {
+    raa_1!();
+    raa_2!(rr);
+    raa_2! {gg};
+}
+
+//  //  //  //  //  //  //  //  //  //  //
 #[derive(Debug)]
 struct OverLoad {}
 
 impl OverLoad {
     fn one(&self) {
         println!("one: <{:?}>", self);
-    }
-    fn two(self) {
-        println!("two: <{:?}>", self);
-    }
-    fn three(self: Box<Self>) {
-        println!("three: <{:?}>", self);
-    }
-    fn four(self: Arc<Self>) {
-        println!("four: <{:?}>", self);
     }
 }
