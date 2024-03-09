@@ -1,35 +1,25 @@
-macro_rules! raa_1 {
-    () => {
-        println!("raa1");
-    };
-}
-
-macro_rules! raa_2 {
-    ($txt:ident) => {
-        println!("raa2: ({})", stringify!($txt));
-        let $txt = "something";
-        println!("raa2.2: ({})", $txt);
-    };
-    [$txt:ident] => {
-        println!("raa3: [{}]", stringify!($txt));
-        let $txt = "something";
-        println!("raa3.3: [{}]", $txt);
-    };
-}
-
 //  //  //  //  //  //  //  //  //  //  //
 fn main() {
-    raa_1!();
-    raa_2!(rr);
-    raa_2! {gg};
+    let list = [Some(1), Some(10), None, None, Some(100), Some(1000), None];
+    println!("\ndbg: {:?}", list);
+    let new_1 = list.map(|i: Option<i32>| {
+        println!("\nmap list: {:?}", i);
+        i.map(|ii| {
+            println!("map ii: {:?}", ii);
+            "= ".to_owned() + &ii.to_string()
+        })
+    });
+    println!("dbg: {:?}\n", new_1);
+    //
+    println!("\ndbg: {:?}", list);
+    let new_2: [Option<String>; 7] = list.map(|i| {
+        println!("\nmap list: {:?}", i);
+        i.and_then(|ii| {
+            println!("and_then ii: {:?}", ii);
+            Some("= ".to_owned() + &ii.to_string())
+        })
+    });
+    println!("dbg: {:?}\n", new_2);
 }
 
 //  //  //  //  //  //  //  //  //  //  //
-#[derive(Debug)]
-struct OverLoad {}
-
-impl OverLoad {
-    fn one(&self) {
-        println!("one: <{:?}>", self);
-    }
-}
